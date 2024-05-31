@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+yolov5/
+
 # AUDIO files
 *.wav
 *.mp3
