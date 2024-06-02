@@ -6,6 +6,10 @@ __pycache__/
 # AUDIO files
 *.wav
 *.mp3
+darknet/
+snack_data/
+test.py/
+car.jpg/
 
 # C extensions
 *.so
