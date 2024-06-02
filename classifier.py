@@ -33,5 +33,3 @@ def run():
                 break
     else:
         print("can't open camera")
-
-
