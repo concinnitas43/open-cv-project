@@ -8,8 +8,8 @@ __pycache__/
 *.mp3
 darknet/
 snack_data/
-test.py/
-car.jpg/
+test.py
+car.jpg
 
 # C extensions
 *.so

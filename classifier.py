@@ -4,10 +4,10 @@ snack_list = []
 snack_points = [0 for i in range(len(snack_list))]
 thresh_point = 100
 
-def where_snack(frame):  # 스낵의 존재성 판별
-    is_there_snack = False
-    snack_location = []  # snack 위치 roi
-    return is_there_snack, snack_location
+def where_snack(frame):  # 스낵의 존재성 판별 
+    is_there_snack = False 
+    snack_location = []  # snack 위치 roi 
+    return is_there_snack, snack_location 
 
 def which_snack(roi):  # 스낵 roi 값이 주어졌을 때 어떤거인지 판별
     return 0  # 스낵리스트에서의 인덱스 리턴
@@ -33,4 +33,3 @@ def run():
                 break
     else:
         print("can't open camera")
-
