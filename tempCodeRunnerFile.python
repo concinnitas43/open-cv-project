@@ -1,0 +1,4 @@
+lst = ['ProductName', 'ProductPrice', 'EventInfo', 'ShortInfo', 'SpecificInfo']
+
+for name in lst:
+    print(f"'{name}':''", end=', ')
