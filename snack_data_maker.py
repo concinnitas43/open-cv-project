@@ -1,7 +1,8 @@
 import cv2
 
 is_there_snack = False
-attempt = 1
+
+attempt = 3
 
 snack_no = 2
 
