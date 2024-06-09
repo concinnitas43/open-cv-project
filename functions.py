@@ -1,10 +1,40 @@
 import dearpygui.dearpygui as dpg
+import cv2
 from image_id import unselected_config, selected_config
+from screeninfo import get_monitors
 
+m = get_monitors()[0]
+WIDTH, HEIGHT = m.width, m.height-89
+
+def Video():
+    dpg.minimize_viewport()
+    cap = cv2.VideoCapture(0)
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        cv2.imshow('Video Capture', frame)
+
+        key = cv2.waitKey(1) 
+        if key == ord('s'):
+            key = 's'
+            break
+        if key == ord('q'):
+            dpg.destroy_context()
+            break
+    cap.release()
+    cv2.destroyAllWindows()
+
+    if key == 's':
+        dpg.maximize_viewport()
+        dpg.configure_item("setting_window", show=True)
+        dpg.configure_item("detailed_settings_window", show=False)
 
 def Resume_click(sender, app_data, user_data):
-    dpg.set_value("label", "Button Clicked!")
-    
+    dpg.configure_item("setting_window", show=False)
+    dpg.configure_item("detailed_settings_window", show=False)
+    Video()
+  
 def Settings_click(sender, app_data, user_data):
     dpg.configure_item("setting_window", show=False)
     dpg.configure_item("detailed_settings_window", show=True)
@@ -68,4 +98,3 @@ def SpecificInfo_click(sender, app_data, user_data):
         new_texture = unselected_config
         dpg.set_value("SpecificInfo", False)
     dpg.configure_item(sender, texture_tag=new_texture)
-
