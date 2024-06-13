@@ -10,21 +10,22 @@ NUM_CLASSES = 6
 class CNNModel(nn.Module):
     def __init__(self):
         super(CNNModel, self).__init__()
+        ##  전형적인 CNN 구조를 만듬, convolution 5개, 중간에 batch norm, pooling, fully connected layer 5개
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv1 = nn.Conv2d(3, 32, 3)  # Increased filters
+        self.conv1 = nn.Conv2d(3, 32, 3)  
         self.bn1 = nn.BatchNorm2d(32)
-        self.conv2 = nn.Conv2d(32, 64, 3)  # Increased filters
+        self.conv2 = nn.Conv2d(32, 64, 3) 
         self.bn2 = nn.BatchNorm2d(64)
-        self.conv3 = nn.Conv2d(64, 128, 3)  # Increased filters
+        self.conv3 = nn.Conv2d(64, 128, 3) 
         self.bn3 = nn.BatchNorm2d(128)
-        self.conv4 = nn.Conv2d(128, 256, 3)  # Increased filters
+        self.conv4 = nn.Conv2d(128, 256, 3) 
         self.bn4 = nn.BatchNorm2d(256)
-        self.conv5 = nn.Conv2d(256, 512, 3)  # New convolutional layer
+        self.conv5 = nn.Conv2d(256, 512, 3)  
         self.bn5 = nn.BatchNorm2d(512)
 
-        self.global_pool = nn.AdaptiveAvgPool2d(1)  # Global average pooling layer
+        self.global_pool = nn.AdaptiveAvgPool2d(1)
 
-        self.fc1 = nn.Linear(512, 256)  # Increased size of fully connected layers
+        self.fc1 = nn.Linear(512, 256) 
         self.fc2 = nn.Linear(256, 128)
         self.fc3 = nn.Linear(128, 64)
         self.fc4 = nn.Linear(64, 32)
@@ -35,9 +36,8 @@ class CNNModel(nn.Module):
         x = self.pool(F.relu(self.bn2(self.conv2(x))))
         x = self.pool(F.relu(self.bn3(self.conv3(x))))
         x = self.pool(F.relu(self.bn4(self.conv4(x))))
-        x = self.pool(F.relu(self.bn5(self.conv5(x))))  # Additional convolutional layer
-
-        x = self.global_pool(x)  # Global average pooling
+        x = self.pool(F.relu(self.bn5(self.conv5(x)))) 
+        x = self.global_pool(x)  # Global Average pooling!
         x = x.view(x.size(0), -1)
         
         x = F.relu(self.fc1(x))
@@ -48,46 +48,43 @@ class CNNModel(nn.Module):
         return x
 
 if __name__ == "__main__":
-    model = CNNModel()
-    # model.load_state_dict(torch.load('cnn-model.pth'))
-    classes = [ f"snack{i}" for i in range(0, NUM_CLASSES) ]
+    model = CNNModel() # 모델 초기화
+    classes = [ f"snack{i}" for i in range(0, NUM_CLASSES) ] 
     print(classes)
     image_paths = []
     labels = []
 
     for label, class_name in enumerate(classes):
-        class_dir = os.path.join('snack_data', class_name)
-        for img_name in os.listdir(class_dir):
+        class_dir = os.path.join('snack_data', class_name) # 모든 snack_data에 있는 이미지 가져오기 위해서...
+        for img_name in os.listdir(class_dir): # 이미지 별로 루프 
             # only if the file is an image
-            if not img_name.endswith('.jpg'):
+            if not img_name.endswith('.jpg'): # 가끔 이미지 아닌게있음;
                 continue
             img_path = os.path.join(class_dir, img_name)
-            image_paths.append(img_path)
-            labels.append(label)
-
+            image_paths.append(img_path) # image_paths 에 이미지 경로 전부 추가.
+            labels.append(label) # 이에 해당하는 라벨도 추가
     image_paths = np.array(image_paths)
     labels = np.array(labels)
 
-    # Generate a permutation of indices
-    indices = np.random.permutation(len(image_paths))
+    indices = np.random.permutation(len(image_paths)) # 섞어버리는 인덳 ㅡ
 
-    # Shuffle arrays with the permutation indices
-    image_paths = image_paths[indices]
+    image_paths = image_paths[indices] # 섞기 
     labels = labels[indices]
 
-    # Convert back to lists if needed
     image_paths = list(image_paths)
     labels = list(labels)
 
-    print(image_paths[:5], labels[:5])
+    print(image_paths[:5], labels[:5]) # 테스트용 출력
 
+    # 훈련 위한 hyper parameters!
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
     batch_size = 32
     num_epochs = 5
     total_steps = len(image_paths) // batch_size
-
+    
+    # 실제 훈련
     for epoch in range(num_epochs):
         running_loss = 0.0
         correct_predictions = 0
