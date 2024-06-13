@@ -7,7 +7,7 @@ import os
 import numpy as np
 
 WIDTH, HEIGHT = 400, 400
-NUM_CLASSES = 3
+NUM_CLASSES = 6
 
 class CNNModel(nn.Module):
     def __init__(self):
@@ -16,8 +16,9 @@ class CNNModel(nn.Module):
         self.conv1 = nn.Conv2d(3, 12, 3)
         self.conv2 = nn.Conv2d(12, 24, 3)
         self.conv3 = nn.Conv2d(24, 48, 3)
-        self.fc1 = nn.Linear(48 * 48 * 48, 32)  # Corrected input size
-        self.fc2 = nn.Linear(32, NUM_CLASSES)
+        self.fc1 = nn.Linear(48 * 48 * 48, 64)  # Corrected input size
+        self.fc2 = nn.Linear(64, 32)  # Corrected input size
+        self.fc3 = nn.Linear(32, NUM_CLASSES)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
@@ -25,7 +26,8 @@ class CNNModel(nn.Module):
         x = self.pool(F.relu(self.conv3(x)))
         x = x.view(-1, 48 * 48 * 48)  # Corrected input size
         x = F.relu(self.fc1(x))
-        x = F.softmax(self.fc2(x), dim=1)
+        x = F.relu(self.fc2(x))
+        x = F.softmax(self.fc3(x), dim=1)
         return x
 
 model = CNNModel()
@@ -38,6 +40,9 @@ labels = []
 for label, class_name in enumerate(classes):
     class_dir = os.path.join('snack_data', class_name)
     for img_name in os.listdir(class_dir):
+        # only if the file is an image
+        if not img_name.endswith('.jpg'):
+            continue
         img_path = os.path.join(class_dir, img_name)
         image_paths.append(img_path)
         labels.append(label)
@@ -76,6 +81,9 @@ for epoch in range(num_epochs):
         images = []
         for img_path in batch_images:
             image = cv2.imread(img_path)
+            if image is None:
+                print('Wrong path:', img_path)
+                continue
             image = cv2.resize(image, (WIDTH, HEIGHT))
             image = torch.tensor(image, dtype=torch.float).permute(2, 0, 1) / 255.0  # Normalize to [0, 1]
             images.append(image)
@@ -86,6 +94,7 @@ for epoch in range(num_epochs):
         outputs = model(images)
         loss = criterion(outputs, batch_labels)
 
+        # 실제 훈련
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -93,24 +102,17 @@ for epoch in range(num_epochs):
         if (step + 1) % 10 == 0:
             print(f'Epoch [{epoch + 1}/{num_epochs}], Step [{step + 1}/{total_steps}], Loss: {loss.item()}')
 
+        ## 정확도 계산을 위해서 
         _, predicted = torch.max(outputs, 1)
         correct_predictions += (predicted == batch_labels).sum().item()
         total_predictions += batch_labels.size(0)
 
         running_loss += loss.item()
 
-        if (step + 1) % 10 == 0:
+        if (step + 1) % 10 == 0: # 정확도 출력
             accuracy = correct_predictions / total_predictions
             print(f'Epoch [{epoch + 1}/{num_epochs}], Step [{step + 1}/{total_steps}], Loss: {running_loss / (step + 1)}, Accuracy: {accuracy:.4f}')
 
-
-# model.eval()
-# with torch.no_grad():
-#     for image in images:
-#         image = torch.tensor(image, dtype=torch.float).permute(2, 0, 1).unsqueeze(0)
-#         output = model(image)
-#         _, predicted = torch.max(output, 1)
-#         print(classes[predicted.item()])
 
 model.eval()
 with torch.no_grad():
@@ -121,7 +123,7 @@ with torch.no_grad():
         image = image.unsqueeze(0)  # Add batch dimension
         output = model(image)
         _, predicted = torch.max(output, 1)
-        print(classes[predicted.item()])
+        # print(classes[predicted.item()])
 
 
-torch.save(model.state_dict(), 'cnn-model.pth')
+torch.save(model.state_dict(), 'cnn-model1.pth')

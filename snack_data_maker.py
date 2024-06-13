@@ -2,9 +2,9 @@ import cv2
 
 is_there_snack = False
 
-attempt = 3
+attempt = 30
 
-snack_no = 2
+snack_no = 6
 
 cap = cv2.VideoCapture(0)
 if cap.isOpened():
@@ -14,11 +14,13 @@ if cap.isOpened():
 
         frame = cv2.flip(frame, 1)
 
-        if cv2.waitKey(1) == 32:
+        x = cv2.waitKey(1)
+
+        if x == 32:
             is_there_snack = not is_there_snack
             attempt += 1
 
-        if cv2.waitKey(1) == 113:
+        if x == 113:
             break
 
         if ret:
