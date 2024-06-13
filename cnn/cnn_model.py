@@ -86,19 +86,23 @@ if __name__ == "__main__":
     
     # 실제 훈련
     for epoch in range(num_epochs):
-        running_loss = 0.0
-        correct_predictions = 0
-        total_predictions = 0
+        running_loss = 0.0 # loss 계산을 위한 변수
+        correct_predictions = 0 # 맞은 예상
+        total_predictions = 0 # 전체 예상 
+
         for step in range(total_steps):
+            # 배치 별로 준비
             batch_images = image_paths[step * batch_size:(step + 1) * batch_size]
             batch_labels = labels[step * batch_size:(step + 1) * batch_size]
 
+            # 이미지 준비
             images = []
             for img_path in batch_images:
                 image = cv2.imread(img_path)
                 if image is None:
                     print('Wrong path:', img_path)
-                    continue
+                    continue # 이미지가 없으면 넘어감  
+                # 준비 
                 image = cv2.resize(image, (WIDTH, HEIGHT))
                 image = torch.tensor(image, dtype=torch.float).permute(2, 0, 1) / 255.0  # Normalize to [0, 1]
                 images.append(image)
@@ -106,7 +110,9 @@ if __name__ == "__main__":
             images = torch.stack(images)
             batch_labels = torch.tensor(batch_labels, dtype=torch.long)
 
+            # 대입 
             outputs = model(images)
+            # loss
             loss = criterion(outputs, batch_labels)
 
             # 실제 훈련
@@ -114,6 +120,7 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
 
+            # 상황 보고
             if (step + 1) % 10 == 0:
                 print(f'Epoch [{epoch + 1}/{num_epochs}], Step [{step + 1}/{total_steps}], Loss: {loss.item()}')
 
@@ -136,9 +143,10 @@ if __name__ == "__main__":
     #         image = cv2.resize(image, (WIDTH, HEIGHT))
     #         image = torch.tensor(image, dtype=torch.float).permute(2, 0, 1) / 255.0  # Normalize to [0, 1]
     #         image = image.unsqueeze(0)  # Add batch dimension
-    #         output = model(image)
+    #         output = model(image
     #         _, predicted = torch.max(output, 1)
             # print(classes[predicted.item()])
 
 
+    # 저장
     torch.save(model.state_dict(), 'cnn-model2.pth')
