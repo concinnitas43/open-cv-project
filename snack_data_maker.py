@@ -2,7 +2,7 @@ import cv2
 
 is_there_snack = False
 
-attempt = 30
+attempt = 90
 
 snack_no = 6
 
@@ -12,15 +12,15 @@ if cap.isOpened():
     while True:
         ret, frame = cap.read()
 
-        frame = cv2.flip(frame, 1)
+        # frame = cv2.flip(frame, 1)
 
         x = cv2.waitKey(1)
 
-        if x == 32:
+        if x == ord(" "):
             is_there_snack = not is_there_snack
             attempt += 1
 
-        if x == 113:
+        if x == ord("q"):
             break
 
         if ret:
