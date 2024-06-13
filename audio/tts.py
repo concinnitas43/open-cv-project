@@ -5,6 +5,7 @@ import pygame
 
 # 제품 정보
 info = {
+    0: {'name': "물품이 감지되지 않습니다."},
     1: {
         'name': '양파링', 
         'price': 4000, 
@@ -56,9 +57,10 @@ def tts_speak(product_ID, volumn, info_state):  # 제품 아이디를 받아 tts
     product_info_lst = list(product_infos.values())  # 제품 정보들에 대한 리스트
     info_states =list(info_state.values())  # True False에 대한 리스트(제품 정보를 말할지 말지)
     text=''  # 빈 텍스트
-    for inx, isTrue in enumerate(info_states):  # 항목 넣어야되면 넣기
-        if isTrue:
-            text = text +' '+ product_info_lst[inx]  #띄어쓰기 하고 정보 넣기
+    if product_ID != 0:
+        for inx, isTrue in enumerate(info_states):  # 항목 넣어야되면 넣기
+            if isTrue:
+                text = text +' '+ product_info_lst[inx]  #띄어쓰기 하고 정보 넣기
     if text =='':  # 텍스트 비었으면
         text = product_info_lst[0]  # 이름 넣기
 

@@ -47,7 +47,6 @@ def Video():
             break
         if key == ord(' '):
             snack_type = classify_image(frame)
-            print(f"SNACK TYPE : {snack_type}")
             pn = dpg.get_value('ProductName')
             pp = dpg.get_value('ProductPrice')
             ev = dpg.get_value('EventInfo')
