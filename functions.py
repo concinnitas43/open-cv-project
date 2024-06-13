@@ -42,6 +42,7 @@ def Video():
         if key == ord('q'): # 만약 key가 q 면 꺼짐 dpg의 context 공간(storge)를 비워줌(=초기화)
             dpg.destroy_context()
             break
+
     cap.release() # vidoe release
     cv2.destroyAllWindows() # windows reset
 

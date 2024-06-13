@@ -4,11 +4,11 @@ dpg.create_context()
 unselected_config=0
 selected_config=0
 with dpg.texture_registry():
-    width, height, channels, data = dpg.load_image("cricle_button_unselected.png")
+    width, height, channels, data = dpg.load_image("./resources/circle_button_unselected.png")
     unselected = dpg.add_static_texture(width=width, height=height, default_value=data, tag="unselected")
 
 with dpg.texture_registry():
-    width, height, channels, data = dpg.load_image("cricle_button_selected.png")
+    width, height, channels, data = dpg.load_image("./resources/circle_button_selected.png")
     selected = dpg.add_static_texture(width=width, height=height, default_value=data, tag="selected")
 
 with dpg.window():

@@ -1,20 +1,25 @@
 from informations import *
 #from buttons_info import home_buttons, settings_buttons, names
 dpg.create_context()
+
 with dpg.texture_registry():
-    width, height, channels, data = dpg.load_image("cricle_button_unselected.png")
+    width, height, channels, data = dpg.load_image("./resources/circle_button_unselected.png")
     unselected = dpg.add_static_texture(width=width, height=height, default_value=data, tag="unselected")
+
 with dpg.texture_registry():
-    width, height, channels, data = dpg.load_image("cricle_button_selected.png")
+    width, height, channels, data = dpg.load_image("./resources/circle_button_selected.png")
     selected = dpg.add_static_texture(width=width, height=height, default_value=data, tag="selected")
+
 def font_size(n: int):
-        return dpg.add_font("./Roboto-Light.ttf", n)
+    return dpg.add_font("./resources/Roboto-Light.ttf", n)
+
 with dpg.font_registry():
     font10=font_size(10)
     font20=font_size(20)
     font30=font_size(30)
     font40=font_size(40)
     font50=font_size(50)
+
 with dpg.value_registry():
     dpg.add_bool_value(default_value=False, tag='ProductName')
     dpg.add_bool_value(default_value=False, tag='ProductPrice')
