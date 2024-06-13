@@ -7,6 +7,9 @@ import cv2
 from image_id import unselected_config, selected_config
 from screeninfo import get_monitors
 
+from cnn.classifier import *
+from audio.tts import *
+
 """
 Monitor의 해상도를 얻어오는 과정. screeninfo 라이브러리의 get_monitors를 사용하였다.
 """
@@ -42,6 +45,10 @@ def Video():
         if key == ord('q'): # 만약 key가 q 면 꺼짐 dpg의 context 공간(storge)를 비워줌(=초기화)
             dpg.destroy_context()
             break
+        if key == ord(' '):
+            snack_type = classify_image(frame)
+            print(f"SNACK TYPE : {snack_type}")
+            tts_speak(snack_type)
 
     cap.release() # vidoe release
     cv2.destroyAllWindows() # windows reset
