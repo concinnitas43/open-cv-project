@@ -5,6 +5,7 @@ __pycache__/
 
 yolov5/
 dataset/
+dataset.zip
 
 # AUDIO files
 *.wav
