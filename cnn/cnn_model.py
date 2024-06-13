@@ -7,7 +7,7 @@ import numpy as np
 from torchvision import transforms
 
 WIDTH, HEIGHT = 400, 400
-NUM_CLASSES = 7
+NUM_CLASSES = 6
 
 class CNNModel(nn.Module):
     def __init__(self):
