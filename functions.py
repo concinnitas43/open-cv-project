@@ -48,7 +48,14 @@ def Video():
         if key == ord(' '):
             snack_type = classify_image(frame)
             print(f"SNACK TYPE : {snack_type}")
-            tts_speak(snack_type)
+            pn = dpg.get_value('ProductName')
+            pp = dpg.get_value('ProductPrice')
+            ev = dpg.get_value('EventInfo')
+            shi = dpg.get_value('ShortInfo')
+            spi = dpg.get_value('SpecificInfo')
+            vol = dpg.get_value('Volumn')
+            info_state = {'ProductName':pn, 'ProductPrice':pp, 'EventInfo':ev, 'ShortInfo':shi, 'SpecificInfo': spi}
+            tts_speak(snack_type, vol, info_state)
 
     cap.release() # vidoe release
     cv2.destroyAllWindows() # windows reset
@@ -93,9 +100,9 @@ def Settings_click(sender, app_data, user_data):
     dpg.configure_item("setting_window", show=False) # Main widow show False
     dpg.configure_item("detailed_settings_window", show=True) # Specific window show True
     
-def Sensitivity_slider(sender, app_data, user_data):
+def Volumn_slider(sender, app_data, user_data):
     """_summary_
-    Sensitivity 아래 slider을 옮겨주면 Sensitivity 객체(dearpugui로 지정해준 변수공간의) 값을 app_data로 설정해준다
+    Volumn 아래 slider을 옮겨주면 Volumn 객체(dearpugui로 지정해준 변수공간의) 값을 app_data로 설정해준다
     
     Args:
         sender: deatpygui에는 tag 시스템이 있다. 객체 고유 id와 유사하고 sender은 callback함수가 종속된 객체의 id이다.
@@ -107,7 +114,7 @@ def Sensitivity_slider(sender, app_data, user_data):
     Returns:
         None
     """
-    dpg.set_value("Sensitivity", app_data) # tag가 Sensitivity인 변수의 값을 app_data로 조정
+    dpg.set_value("Volumn", app_data) # tag가 Volumn인 변수의 값을 app_data로 조정
 
 def Exit_click(sender, app_data, user_data):
     """_summary_
