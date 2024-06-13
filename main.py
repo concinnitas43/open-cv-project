@@ -26,7 +26,7 @@ with dpg.value_registry():
     dpg.add_bool_value(default_value=False, tag='EventInfo')
     dpg.add_bool_value(default_value=False, tag='ShortInfo')
     dpg.add_bool_value(default_value=False, tag='SpecificInfo')
-    dpg.add_int_value(default_value=3, tag='Volumn')
+    dpg.add_int_value(default_value=30, tag='Volumn')
 
 
 class MyButton:
@@ -75,7 +75,7 @@ with dpg.window(label="Detailed Settings Window", show=False, width=WIDTH, heigh
         bt = dpg.add_text(b, pos=(position[0][0]+30, position[0][1]-5))
     dpg.add_slider_int(pos=(1/5*WIDTH-60,1/2*HEIGHT),\
                        width=400, height=50,\
-                    track_offset=0.3, min_value=0, max_value=10, callback=Volumn_slider)
+                    track_offset=0.3, min_value=0, max_value=100, callback=Volumn_slider)
 
 
 dpg.create_viewport(title='What is Your Name', width=WIDTH, height=HEIGHT+89)
