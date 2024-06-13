@@ -2,10 +2,11 @@ import cv2
 
 is_there_snack = False
 
-attempt = 90
+attempt = 90 # 혹시라도 겹치지 않게 하기 위해서 시도 횟수 정의
 
-snack_no = 6
+snack_no = 6 # 간식 번호
 
+# 카메라 열기
 cap = cv2.VideoCapture(0)
 if cap.isOpened():
     frame_no = 0

@@ -1,7 +1,14 @@
 from cnn.cnn_model import *
 
-model = CNNModel()
-model.load_state_dict(torch.load('cnn/cnn-model1.pth'))
+# model = CNNModel()
+def load_model_on_cpu(model_path):
+    return torch.load(model_path, map_location=torch.device('cpu'))
+
+# Use this function to load your model
+model = CNNModel()  # Initialize the model
+model.load_state_dict(load_model_on_cpu('cnn/cnn-model.pth'))  # Load model weights
+
+# model.load_state_dict(torch.load('cnn/cnn-model.pth'))
 
 def classify_image(image):
     # evaluate the class on image

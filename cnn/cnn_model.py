@@ -5,58 +5,46 @@ import cv2
 import os
 import numpy as np
 from torchvision import transforms
-
-WIDTH, HEIGHT = 400, 400
+WIDTH, HEIGHT = 600, 600
 NUM_CLASSES = 6
-
 class CNNModel(nn.Module):
     def __init__(self):
         super(CNNModel, self).__init__()
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv1 = nn.Conv2d(3, 12, 3)
-        self.bn1 = nn.BatchNorm2d(12)
-        self.conv2 = nn.Conv2d(12, 24, 3)
-        self.bn2 = nn.BatchNorm2d(24)
-        self.conv3 = nn.Conv2d(24, 48, 3)
-        self.bn3 = nn.BatchNorm2d(48)
-        self.fc1 = nn.Linear(48 * 48 * 48, 64)
-        self.dropout1 = nn.Dropout(0.5)
-        self.fc2 = nn.Linear(64, 32)
-        self.dropout2 = nn.Dropout(0.5)
-        self.fc3 = nn.Linear(32, NUM_CLASSES)
+        self.conv1 = nn.Conv2d(3, 32, 3)  # Increased filters
+        self.bn1 = nn.BatchNorm2d(32)
+        self.conv2 = nn.Conv2d(32, 64, 3)  # Increased filters
+        self.bn2 = nn.BatchNorm2d(64)
+        self.conv3 = nn.Conv2d(64, 128, 3)  # Increased filters
+        self.bn3 = nn.BatchNorm2d(128)
+        self.conv4 = nn.Conv2d(128, 256, 3)  # Increased filters
+        self.bn4 = nn.BatchNorm2d(256)
+        self.conv5 = nn.Conv2d(256, 512, 3)  # New convolutional layer
+        self.bn5 = nn.BatchNorm2d(512)
+
+        self.global_pool = nn.AdaptiveAvgPool2d(1)  # Global average pooling layer
+
+        self.fc1 = nn.Linear(512, 256)  # Increased size of fully connected layers
+        self.fc2 = nn.Linear(256, 128)
+        self.fc3 = nn.Linear(128, 64)
+        self.fc4 = nn.Linear(64, 32)
+        self.fc5 = nn.Linear(32, NUM_CLASSES)
 
     def forward(self, x):
         x = self.pool(F.relu(self.bn1(self.conv1(x))))
-        x = x = self.pool(F.relu(self.bn2(self.conv2(x))))
+        x = self.pool(F.relu(self.bn2(self.conv2(x))))
         x = self.pool(F.relu(self.bn3(self.conv3(x))))
-        x = x.view(-1, 48 * 48 * 48)
-        x = F.relu(self.fc1(x))
-        x = self.dropout1(x)
-        x = F.relu(self.fc2(x))
-        x = self.dropout2(x)
-        x = F.softmax(self.fc3(x), dim=1)
-        return x
+        x = self.pool(F.relu(self.bn4(self.conv4(x))))
+        x = self.pool(F.relu(self.bn5(self.conv5(x))))  # Additional convolutional layer
 
-
-class biigerCNNModel(nn.Module):
-    def __init__(self):
-        super(CNNModel, self).__init__()
-        self.pool = nn.MaxPool2d(2, 2)
-        self.conv1 = nn.Conv2d(3, 12, 3)
-        self.conv2 = nn.Conv2d(12, 24, 3)
-        self.conv3 = nn.Conv2d(24, 48, 3)
-        self.fc1 = nn.Linear(48 * 48 * 48, 64)  # Corrected input size
-        self.fc2 = nn.Linear(64, 32)  # Corrected input size
-        self.fc3 = nn.Linear(32, NUM_CLASSES)
-
-    def forward(self, x):
-        x = self.pool(F.relu(self.conv1(x)))
-        x = self.pool(F.relu(self.conv2(x)))
-        x = self.pool(F.relu(self.conv3(x)))
-        x = x.view(-1, 48 * 48 * 48)  # Corrected input size
+        x = self.global_pool(x)  # Global average pooling
+        x = x.view(x.size(0), -1)
+        
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
-        x = F.softmax(self.fc3(x), dim=1)
+        x = F.relu(self.fc3(x))
+        x = F.relu(self.fc4(x))
+        x = self.fc5(x)
         return x
 
 if __name__ == "__main__":
