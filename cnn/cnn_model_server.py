@@ -6,6 +6,8 @@ import os
 import numpy as np
 from torchvision import transforms
 
+## GPU 서버에서 하기 위해서 cnn_model.py 수정 => GPU 관련된 부분만 조금 다름 
+
 WIDTH, HEIGHT = 600, 600
 NUM_CLASSES = 6
 class CNNModel(nn.Module):
@@ -50,10 +52,10 @@ class CNNModel(nn.Module):
 
 
 if __name__ == "__main__":
+    # 디바이스 설정 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = CNNModel().to(device)
 
-    # model.load_state_dict(torch.load('cnn-model.pth'))
     classes = [f"snack{i}" for i in range(0, NUM_CLASSES)]
     print(classes)
     image_paths = []
@@ -62,7 +64,6 @@ if __name__ == "__main__":
     for label, class_name in enumerate(classes):
         class_dir = os.path.join('snack_data', class_name)
         for img_name in os.listdir(class_dir):
-            # only if the file is an image
             if not img_name.endswith('.jpg'):
                 continue
             img_path = os.path.join(class_dir, img_name)
@@ -72,14 +73,11 @@ if __name__ == "__main__":
     image_paths = np.array(image_paths)
     labels = np.array(labels)
 
-    # Generate a permutation of indices
     indices = np.random.permutation(len(image_paths))
 
-    # Shuffle arrays with the permutation indices
     image_paths = image_paths[indices]
     labels = labels[indices]
 
-    # Convert back to lists if needed
     image_paths = list(image_paths)
     labels = list(labels)
 
