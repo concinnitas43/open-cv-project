@@ -6,6 +6,7 @@ __pycache__/
 yolov5/
 dataset/
 dataset.zip
+snack_data.zip
 
 # AUDIO files
 *.wav
