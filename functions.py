@@ -52,7 +52,7 @@ def Video():
             ev = dpg.get_value('EventInfo')
             shi = dpg.get_value('ShortInfo')
             spi = dpg.get_value('SpecificInfo')
-            vol = dpg.get_value('Volumn')
+            vol = dpg.get_value('Volume')
             info_state = {'ProductName':pn, 'ProductPrice':pp, 'EventInfo':ev, 'ShortInfo':shi, 'SpecificInfo': spi}
             tts_speak(snack_type, vol, info_state)
 
@@ -99,9 +99,9 @@ def Settings_click(sender, app_data, user_data):
     dpg.configure_item("setting_window", show=False) # Main widow show False
     dpg.configure_item("detailed_settings_window", show=True) # Specific window show True
     
-def Volumn_slider(sender, app_data, user_data):
+def Volume_slider(sender, app_data, user_data):
     """_summary_
-    Volumn 아래 slider을 옮겨주면 Volumn 객체(dearpugui로 지정해준 변수공간의) 값을 app_data로 설정해준다
+    Volume 아래 slider을 옮겨주면 Volume 객체(dearpugui로 지정해준 변수공간의) 값을 app_data로 설정해준다
     
     Args:
         sender: deatpygui에는 tag 시스템이 있다. 객체 고유 id와 유사하고 sender은 callback함수가 종속된 객체의 id이다.
@@ -113,7 +113,7 @@ def Volumn_slider(sender, app_data, user_data):
     Returns:
         None
     """
-    dpg.set_value("Volumn", app_data) # tag가 Volumn인 변수의 값을 app_data로 조정
+    dpg.set_value("Volume", app_data) # tag가 Volume인 변수의 값을 app_data로 조정
 
 def Exit_click(sender, app_data, user_data):
     """_summary_
@@ -148,17 +148,29 @@ def ProductName_click(sender, app_data, user_data):
     """
     current_texture = dpg.get_item_configuration(sender)["texture_tag"]
     """
-    productname button은 dpg.add_image_button으로 image를 texuture_tag
-    """ 
-    if current_texture == unselected_config:
-        new_texture = selected_config
-        dpg.set_value("ProductName", True)
-        #print(dpg.get_value("ProductName"))
-    else:
-        new_texture = unselected_config
-        dpg.set_value("ProductName", False)
-    dpg.configure_item(sender, texture_tag=new_texture)
+    윗 줄 코드 설명 get_item_configuration(sender)해서 sender의 정보 불러와서 key가 저거인걸 저장
+    productname button은 dpg.add_image_button(texuture_tag=imgae)를 통해 이미지를 지정해준다. 
+    image는 image_id.py에 있으며 selected, unselected가 있다. 
 
+    (첨언, 이 설명은 image_id.py에도 있다.) main.py를 보면 이미지를 저장해주는 함수가 있음에도 별도로 image_id.py를 만들었다.
+    그 이유는 sender의 texture_tag를 print해보면 main의 경우 str: selcted or unselcted인데 
+    fuctions에서는 그 값이 int와 불규칙적 숫자로 저장된다.
+    아마 dearpygui라이브러리에서 int id로 tag를 관리하는 것 같은데, 그것은 서칭해도 못찾았다.
+    그래서 id(int)를 찾아주는 과정이 필요해 별도의 iamge_id.py를 만든것이다.
+    또 그 숫자가 내 컴퓨터 환경에 종속되는지조차 알 수 없어, 새로운 dpg.create_context()을 통해 객채를 만들어주고
+    그것의 id를 저장해주었다
+    """ 
+    if current_texture == unselected_config: # 만일 unselected라면 
+        new_texture = selected_config       # selcted로 new로
+        dpg.set_value("ProductName", True)  # set_value로 ProductName의 변수값을 True로 전환(info_state의 변수)
+    else:
+        new_texture = unselected_config     # unselcted로 전환
+        dpg.set_value("ProductName", False) # set_value로 info_state 변수 값 전환
+    dpg.configure_item(sender, texture_tag=new_texture) # image를 새로 할당
+"""
+아래 버튼들은 모두 ProductName_click 함수와 기능이 같다. 코드가 다 똑같아서 별도의 설명은 안적겠다.
+클릭될 경우 image를 전환해주고 해당 변수(bool 형)값을 전환해준다.
+"""
 def ProductPrice_click(sender, app_data, user_data):
     current_texture = dpg.get_item_configuration(sender)["texture_tag"]
     if current_texture == unselected_config:
